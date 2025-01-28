@@ -1,0 +1,65 @@
+{% extends "todo/base.html" %}
+
+{% block title %}Вхід{% endblock %}
+
+{% block content %}
+
+<style>
+    .email {
+        border: 2px solid rgb(227, 131, 147);
+        outline: none; 
+        transition: border-color 0.3s ease;
+    }
+    .email:focus {
+        border-color: rgb(227, 131, 147);
+        box-shadow: 0 0 8px rgba(227, 131, 147, 0.8); 
+    }
+</style>
+
+<center>
+    <div class="card-my" style="max-width: 500px; background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));">
+        <h3>Заповніть форму для входу</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group-my">
+                <label for="id_email" style="color: black;">Електронна пошта:</label><br>
+                {{ form.email }}
+            </div>
+            <div class="form-group-my">
+                <label for="id_password" style="color: black;">Пароль:</label><br>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn-my m-3" style="background-color: rgb(252, 117, 117); border-color: rgb(224, 103, 103); color: black;">Увійти</button>
+        </form>
+        <a href="{% url 'add_user' %}" style="color: rgb(205, 80, 80);">Реєстрація</a>
+        {% if form.errors %}
+            <ul class="error-list">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</center>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if messages %}
+        {% for message in messages %}
+        Swal.fire({
+            title: {% if message.tags == 'error' %}'Помилка!'{% elif message.tags == 'success' %}'Успіх!'{% else %}'Повідомлення'{% endif %},
+            text: '{{ message }}',
+            icon: {% if message.tags == 'error' %}'error'{% elif message.tags == 'success' %}'success'{% else %}'info'{% endif %},
+            showCancelButton: {% if message.tags == 'error' %}true{% else %}false{% endif %},
+            confirmButtonText: {% if message.tags == 'error' %}'OK'{% else %}'OK'{% endif %},
+            cancelButtonText: 'Відміна',
+        })
+        {% endfor %}
+        {% endif %}
+    });
+</script>
+
+
+{% endblock %}

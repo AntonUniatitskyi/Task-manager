@@ -1,0 +1,81 @@
+{% extends 'todo/base.html' %}
+
+{% block title %}
+    Видалення
+{% endblock title %}
+
+{% block content %}
+    <style>
+    .card-my {
+        background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(152, 31, 31, 0.56);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 600px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-my:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 20px rgba(152, 31, 31, 0.56);
+    }
+
+    .card-my h3 {
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        color: #c50f0f;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+    .card-my p {
+        font-family: 'Arial', sans-serif;
+        color: #030000;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+    }
+
+    form button,
+    form a {
+        display: inline-block;
+        padding: 12px 20px;
+        text-decoration: none;
+        font-size: 1.1em;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    form button {
+        background: linear-gradient(to right, #c50f0f, #6e0f0f);
+        border: none;
+        margin-right: 15px;
+    }
+    form button:hover {
+        background: linear-gradient(to right, #8e0f0f, #c50f0f);
+        transform: translateY(-3px);
+    }
+    form a {
+        background: linear-gradient(to right, #fa9751, #fbc093, rgb(252, 117, 117));
+        border: none;
+    }
+    form a:hover {
+        background: linear-gradient(to right, #f9a657, #f8c08d, rgb(253, 129, 129));
+        transform: translateY(-3px);
+    }
+    </style>
+
+    <div class="container card-my">
+        <h3>Видалення завдання</h3>
+        <p>Ви впевнені, що хочете видалити "{{ object.title }}"?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="color: white">Так, видалити</button>
+            <a href="{% url 'task_list' %}" class="btn">Ні, назад до списку завдань</a>
+        </form>
+    </div>
+
+{% endblock content %}

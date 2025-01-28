@@ -1,0 +1,115 @@
+{% extends 'todo/base.html' %}
+
+{% block title %}
+Мої завдання
+{% endblock title %}
+
+{% block content %}
+<style>
+  .list-group-numbered .no-number {
+      counter-increment: none;
+      position: relative;
+  }
+  .list-group-numbered .no-number::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+  }
+
+  .form-group-my {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .center-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+
+</style>
+
+<center>
+  <h2 class="mb-3">Ваші завдання</h2>
+</center>
+<hr>
+  <div class="center-content">
+    <div class="container form-group-my" style="text-align: center; max-width: 125px; margin-right: 5px;">
+      <form method="get" id="statusForm" class="form-inline">
+          {{ form.status.label_tag }}
+          {{ form.status }}
+      </form>
+    </div>
+    <div class="container form-group-my" style="text-align: center; max-width: 125px; margin-left: 5px;">
+      <form method="get" id="priorityForm" class="form-inline">
+          {{ form.priority.label_tag }}
+          {{ form.priority }}
+      </form>
+    </div>
+    <hr>
+  </div>
+  {% if task_list %}
+
+  <ol class="list-group list-group-numbered container" style="max-width: 500px; border-radius: 10px">
+    {% for task in task_list %}
+    <li class="list-group-item d-flex align-items-center" style="background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));">
+      
+      <form action="{% url 'task_complete' task.pk %}" method="post" class="me-3">
+        {% csrf_token %}
+        {% if task.status == 'done' %}
+        <button type="submit" class="btn" style="font-weight: bold; font-size: 14px; padding: 5px 15px; border-radius: 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg></button>
+        {% else %}
+        <button type="submit" class="btn" style="font-weight: bold; font-size: 14px; padding: 5px 15px; border-radius: 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+          </svg></button>
+        {% endif %}
+      </form>
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">
+          <a href="{% url 'task_detail' task.pk %}" style="text-decoration: none; color: inherit;">{{ task.title }}</a>
+        </div>
+        <small class="text-muted">{{ task.created_add }}</small>
+      </div>
+      <span class="badge rounded-pill" style="background-color: #fab483; color: black; font-weight: bold;">
+        {{ task.get_priority_display }}
+      </span>
+    </li>
+    
+    {% endfor %}
+
+    <li class="list-group-item no-number" style="background: linear-gradient(to right, #fa9751, #fbc093, rgb(252, 117, 117)); text-align: center;">
+      <div class="ms-2 me-auto">
+          <div class="fw-bold">
+              <a href="{% url 'add_task' %}" style="text-decoration: none; color: inherit;">Додати</a>
+          </div>
+      </div>
+    </li>
+  </ol>
+  {% else %}
+  <center>
+    <h1 style="color: red;">У вас ще немає завдань!</h1>
+    <li class="list-group-item no-number" style="background: linear-gradient(to right, #fa9751, #fbc093, rgb(252, 117, 117)); text-align: center; max-width: 300px; height: 30px; border-radius: 5px;">
+      <div class="ms-2 me-auto">
+          <div class="fw-bold">
+              <a href="{% url 'add_task' %}" style="text-decoration: none; color: inherit;">Додати</a>
+          </div>
+      </div>
+    </li>
+  </center>
+  {% endif %}
+    
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends 'todo/base.html' %}
+
+{% block title %}
+    Змінити
+{% endblock title %}
+
+{% block content %}
+    <div class="task-container" style="background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Оновлення завдання</h1>
+            <label for="id_title">Назва завдання:</label>
+            {{ form.title }}
+            <label class="mt-3" for="id_descriptions">Опис завдання:</label>
+            {{ form.descriptions }}
+            <label class="mt-3" for="id_deadline">Дедлайн:</label>
+            {{ form.deadline }}
+            <label class="mt-3" for="id_priority">Приорітет:</label>
+            {{ form.priority }}
+            <label class="mt-3" for="id_status">Статус:</label>
+            {{ form.status }}
+            <center><button type="submit" class="btn btn-primary mt-3" style="background: linear-gradient(to right, #fa9751, #fbc093); border-radius: 5px; border: none">Оновити</button></center>
+        </form>
+        <a href="{% url 'task_list' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+            </svg>
+        </a>
+    </div>
+
+
+{% endblock content %}

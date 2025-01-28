@@ -1,0 +1,79 @@
+{% extends "todo/base.html" %}
+
+{% block title %}
+Реєстрація
+{% endblock %}
+
+{% block content %}
+
+<style>
+    input[type="password"] {
+        background-color: #f7decdeb !important;
+        border: 2px solid rgb(227, 131, 147);
+        outline: none; 
+        transition: border-color 0.3s ease;
+    }
+    input[type="password"]:focus {
+        border-color: rgb(227, 131, 147);
+        box-shadow: 0 0 8px rgba(227, 131, 147, 0.8); 
+    }
+
+    .email {
+        border: 2px solid rgb(227, 131, 147);
+        outline: none; 
+        transition: border-color 0.3s ease;
+    }
+    .email:focus {
+        border-color: rgb(227, 131, 147);
+        box-shadow: 0 0 8px rgba(227, 131, 147, 0.8); 
+    }
+</style>
+
+<center>
+    <div class="card-my" style="max-width: 500px; background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));">
+        <h3>Заповніть форму для продовження</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group-my">
+                <label for="id_username" style="color: black;">Юзернейм не може містити пробіли:</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group-my">
+                <label for="id_email" style="color: black;">Пошта:</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group-my">
+                <label for="id_password1" style="color: black;">Пароль:</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group-my">
+                <label for="id_password2" style="color: black;">Повторіть пароль:</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit" class=" btn btn-my m-3" style="background-color: rgb(252, 117, 117); border-color: rgb(224, 103, 103); color: black;">Додати</button>
+        </form>
+    </div>
+</center>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if messages %}
+        {% for message in messages %}
+        Swal.fire({
+            title: 'Помилка!',
+            text: '{{ message }}',
+            showCancelButton: true,
+            confirmButtonText: 'Увійти',
+            cancelButtonText: 'Відміна',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{% url 'login' %}"; // Замените 'login' на URL входа
+            }
+        });
+        {% endfor %}
+        {% endif %}
+    });
+</script>
+
+
+{% endblock %}
