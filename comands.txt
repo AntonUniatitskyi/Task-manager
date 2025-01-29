@@ -19,3 +19,5 @@ python manage.py createsuperuser
 
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+
+gj

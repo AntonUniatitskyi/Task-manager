@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import Form, EmailField, EmailInput, CharField, PasswordInput, Textarea, DateTimeInput, Select, ModelForm, TextInput, ChoiceField
-from .models import Task
+from django.forms import Form, EmailField, EmailInput, CharField, PasswordInput, Textarea, DateTimeInput, Select, ModelForm, TextInput, ChoiceField, FileInput
+from .models import Task, Comment
 
 class TaskForm(ModelForm):
     class Meta:
@@ -36,6 +36,23 @@ class TaskForm(ModelForm):
             #     'style': 'background-color: #f7decdeb; pointer-events: none;',
             #     'class': 'form-control',
             # })
+        }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["text", "media"]
+        widgets = {
+            "text": Textarea(attrs={
+                'class': 'form-control custom-text-input',
+                'placeholder': 'Ваш коментар',
+
+            }),
+            'media': FileInput(attrs={
+                'class': 'custom-file-input',
+                'id': 'media',
+                'accept': 'image/*'
+            })
         }
 
 class UserForm(UserCreationForm):

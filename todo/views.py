@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from todo import models
-from .forms import UserForm, EmailPasswordForm, TaskForm, TaskFilterForm
+from .forms import UserForm, EmailPasswordForm, TaskForm, TaskFilterForm, CommentForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login
@@ -42,6 +42,13 @@ class TaskListDetail(UserIsOwnerMixin, DetailView):
     model = models.Task
     template_name = 'todo/task_detail.html'
     context_object_name = 'task_detail'
+    form_class = CommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
+
 
     def post(self, request, *args, **kwargs):
         task = self.get_object()
@@ -50,7 +57,21 @@ class TaskListDetail(UserIsOwnerMixin, DetailView):
         if new_status in dict(task.STATUS_CHOICES):
             task.status = new_status
             task.save()
-        return redirect('task_detail', pk=task.pk)
+            return redirect('task_detail', pk=task.pk)
+
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.task = task
+            comment.creator = request.user
+            comment.save()
+            return redirect('task_detail', pk=task.pk)
+
+        context = self.get_context_data()
+        context['comment_form'] = form
+        return self.render_to_response(context)
+
+
 
 def logout_view(request):
     logout(request)
