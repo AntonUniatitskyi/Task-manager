@@ -4,187 +4,198 @@
 
 {% block content %}
 
-<style>
-    .custom-file-upload {
-        display: inline-block;
-        cursor: pointer;
-    }
+    <style>
+        .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+        }
 
-    .custom-file-input {
-        display: none;
-    }
+        .custom-file-input {
+            display: none;
+        }
 
-    .custom-text-input {
-        height: 50px;
-        max-height: 200px;
-        background: linear-gradient(to left, rgb(203, 183, 165), rgb(225, 182, 146));
-        color: black;
-    }
-    .custom-text-input:focus {
-        box-shadow: 0 0 8px black ;
-    }
+        .custom-text-input {
+            height: 50px;
+            max-height: 200px;
+            background: linear-gradient(to left, rgb(203, 183, 165), rgb(225, 182, 146));
+            color: black;
+        }
+
+        .custom-text-input:focus {
+            box-shadow: 0 0 8px black;
+        }
 
 
-    .task-container {
-        background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        text-align: left;
-        flex: 1;
-        max-width: 60%;
-    }
+        .task-container {
+            background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            flex: 1;
+            max-width: 60%;
+        }
 
-    .comment-add {
-        background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
-        border-radius: 15px;
-        max-width: 400px;
-        width: 100%;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        text-align: left;
-    }
+        .comment-add {
+            background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
+            border-radius: 15px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
 
-    .in-flx {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-    }
+        .in-flx {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-left: 1px;
+        }
 
-    .comments-container {
-        max-height: 400px;
-        overflow-y: auto;
-        padding-right: 10px;
-        border: none;
-        border-radius: 8px;
-        background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
-        margin-bottom: 10px;
-    }
+        .comments-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to left, rgb(228, 204, 181), rgb(255, 205, 163));
+            margin-bottom: 10px;
+        }
 
-    .comment {
-        padding: 5px;
-        margin-bottom: 10px;
-        margin-left: 5px;
-        margin-right: 5px;
-    }
+        .comment {
+            padding: 5px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
 
-    .comment p {
-        margin: 5px 0;
-        font-size: 14px;
-    }
+        .comment p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
 
-    .comment strong {
-        color: #333;
-        font-weight: bold;
-    }
+        .comment strong {
+            color: #333;
+            font-weight: bold;
+        }
 
-    .comment a {
-        color: #007bff;
-        text-decoration: none;
-    }
+        .comment a {
+            color: #007bff;
+            text-decoration: none;
+        }
 
-    .comment a:hover {
-        text-decoration: underline;
-    }
+        .comment a:hover {
+            text-decoration: underline;
+        }
 
-    .comment hr {
-        border: 1px solid #000000;
-        margin-top: 15px;
-    }
+        .comment hr {
+            border: 1px solid #000000;
+            margin-top: 15px;
+        }
 
-    img {
-        max-width: 100%;
-        height: auto;
-        margin-top: 10px;
-        border-radius: 10px;
-    }
-</style>
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+    </style>
 
-<div class="in-flx">
-    <div class="task-container" style="width: 500px">
+    <div class="in-flx">
+        <div class="task-container" style="width: 500px">
+            {% if task_detail %}
+                <span class="priority-badge"
+                      style="background-color: #fab483; color: black; font-weight: bold;">{{ task_detail.get_priority_display }}</span>
+
+                <h1>{{ task_detail.title }}</h1>
+                <p>{{ task_detail.descriptions }}</p>
+                <p><strong>Дедлайн:</strong> {{ task_detail.deadline }}</p>
+
+                <div class="status-form">
+                    <p><strong>Статус:</strong></p>
+                    <form method="POST" id="statusForm" class="ms-3">
+                        {% csrf_token %}
+                        <select name="status" id="status" class="form-select"
+                                onchange="document.getElementById('statusForm').submit()"
+                                style="background-color: #f7decdeb;">
+                            {% for value, label in task_detail.STATUS_CHOICES %}
+                                <option value="{{ value }}" {% if task_detail.status == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+
+                <div class="task-footer">
+                    <p><strong>Створив:</strong> {{ task_detail.created_by }}</p>
+                    <p><strong>Дата створення:</strong> {{ task_detail.created_add }}</p>
+                </div>
+
+                <a href="{% url 'task_update' task_detail.pk %}" class="btn" style="color: black">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                    </svg>
+                </a>
+                <a href="{% url 'task_delete' task_detail.pk %}" class="btn" style="color: red">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    </svg>
+                </a>
+            {% else %}
+                <p>Щось пішло не так</p>
+            {% endif %}
+        </div>
+
         {% if task_detail %}
-            <span class="priority-badge" style="background-color: #fab483; color: black; font-weight: bold;">{{ task_detail.get_priority_display }}</span>
-
-            <h1>{{ task_detail.title }}</h1>
-            <p>{{ task_detail.descriptions }}</p>
-            <p><strong>Дедлайн:</strong> {{ task_detail.deadline }}</p>
-
-            <div class="status-form">
-                <p><strong>Статус:</strong></p>
-                <form method="POST" id="statusForm" class="ms-3">
+            <div class="comment-add ms-auto">
+                <div class="comments-container">
+                    <br>
+                    {% for comment in task_detail.comments.all %}
+                        <div class="comment">
+                            <p><strong>{{ comment.creator.username }}</strong> - {{ comment.comment_date|timesince }}
+                            </p>
+                            <p>{{ comment.text }}</p>
+                            {% if comment.media %}
+                                <a href="{{ comment.media.url }}" target="_blank"><img src="{{ comment.media.url }}"
+                                                                                       alt="Image"></a>
+                            {% endif %}
+                            <hr>
+                        </div>
+                    {% empty %}
+                        <p style="margin-left: 10px">Немає коментарів</p>
+                    {% endfor %}
+                </div>
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <select name="status" id="status" class="form-select" onchange="document.getElementById('statusForm').submit()" style="background-color: #f7decdeb;">
-                        {% for value, label in task_detail.STATUS_CHOICES %}
-                        <option value="{{ value }}" {% if task_detail.status == value %}selected{% endif %}>
-                            {{ label }}
-                        </option>
-                        {% endfor %}
-                    </select>
+                    {{ comment_form.text }}
+                    <label for="media" class="custom-file-upload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-paperclip" viewBox="0 0 16 16" style="rotate: 90deg">
+                            <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+                        </svg>
+                        <span id="file-name"></span>
+                    </label>
+                    {{ comment_form.media }}
+                    <button type="submit" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-send-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+                        </svg>
+                    </button>
                 </form>
             </div>
-
-            <div class="task-footer">
-                <p><strong>Створив:</strong> {{ task_detail.created_by }}</p>
-                <p><strong>Дата створення:</strong> {{ task_detail.created_add }}</p>
-            </div>
-
-            <a href="{% url 'task_update' task_detail.pk %}" class="btn" style="color: black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                </svg>
-            </a>
-            <a href="{% url 'task_delete' task_detail.pk %}" class="btn" style="color: red">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                </svg>
-            </a>
         {% else %}
-            <p>Щось пішло не так</p>
+            <p>Щось не так</p>
         {% endif %}
     </div>
 
-    {% if task_detail %}
-        <div class="comment-add ms-auto">
-            <div class="comments-container">
-                <br>
-                {% for comment in task_detail.comments.all %}
-                    <div class="comment">
-                        <p><strong>{{ comment.creator.username }}</strong> - {{ comment.comment_date|timesince }}</p>
-                        <p>{{ comment.text }}</p>
-                        {% if comment.media %}
-                            <a href="{{ comment.media.url }}" target="_blank"><img src="{{ comment.media.url }}" alt="Image"></a>
-                        {% endif %}
-                        <hr>
-                    </div>
-                {% empty %}
-                    <p style="margin-left: 10px">Немає коментарів</p>
-                {% endfor %}
-            </div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ comment_form.text }}
-                <label for="media" class="custom-file-upload">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="rotate: 90deg">
-                        <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
-                    </svg>
-                    <span id="file-name"></span>
-                </label>
-                {{ comment_form.media }}
-                <button type="submit" class="btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-                      <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
-                    </svg>
-                </button>
-            </form>
-        </div>
-    {% else %}
-        <p>Щось не так</p>
-    {% endif %}
-</div>
-
     <script>
-        document.getElementById('media').addEventListener('change', function(event) {
+        document.getElementById('media').addEventListener('change', function (event) {
             const fileName = event.target.files[0]?.name || '';
             document.getElementById('file-name').textContent = fileName ? `- ${fileName}` : '';
         });
