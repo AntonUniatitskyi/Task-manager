@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import Form, EmailField, EmailInput, CharField, PasswordInput, Textarea, DateTimeInput, Select, ModelForm, TextInput, ChoiceField, FileInput
-from .models import Task, Comment
+from .models import Task, Comment, Executer
 
 class TaskForm(ModelForm):
     class Meta:
@@ -36,6 +36,17 @@ class TaskForm(ModelForm):
             #     'style': 'background-color: #f7decdeb; pointer-events: none;',
             #     'class': 'form-control',
             # })
+        }
+
+class ExecuterForm(ModelForm):
+    class Meta:
+        model = Executer
+        fields = ["executer_id"]
+        widgets = {
+            "executer_id": Select(attrs={
+                'class': 'form-control form-select',
+                'style': 'background-color: #f7decdeb;'
+            })
         }
 
 class CommentForm(ModelForm):

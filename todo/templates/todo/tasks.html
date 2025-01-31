@@ -36,7 +36,13 @@
             width: 100%;
         }
 
-
+        .task-container-ap {
+            max-width: 600px;
+            padding: 5px;
+            text-align: left;
+            position: relative;
+            font-size: 16px;
+        }
     </style>
 
     <center>
@@ -122,6 +128,25 @@
                 </div>
             </li>
         </center>
-    {% endif %}
+        {% endif %}
+        <hr style="margin-top: 60px;"><div>
+            {% if executers_t %}
+                <p>Ви отримали запрошення:</p>
+                <div class="task-container-ap">
+                    <form method="POST" action="{% url 'approve_task' %}">
+                        {% csrf_token %}
+                        {% for executer in executers_t %}
+                            {% if not executer.approwed %}
+                                <label>
+                                    <input type="checkbox" name="executer_id" value="{{ executer.id }}" onchange="this.form.submit()">
+                                    Прийняти завдання: {{ executer.task_id.title }} - {{ executer.task_id.created_by }}
+                                </label>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </form>
+                </div>
+            {% endif %}
+        </div>
 
 {% endblock content %}

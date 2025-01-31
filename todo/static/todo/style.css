@@ -163,3 +163,12 @@ position: relative;
     left: -2rem; /* Отступ для совместимости с нумерацией */
 }
 
+.task-container-ap {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    position: relative;
+}

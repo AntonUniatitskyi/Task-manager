@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -25,6 +26,14 @@ class Task(models.Model):
     def __str__(self):
         return f"{self.title}, {self.created_by}"
 
+
+class Executer(models.Model):
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="executers")
+    executer_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    approwed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.task_id}, {self.executer_id.username if self.executer_id else 'Нікого'}"
 
 class Comment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')

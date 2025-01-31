@@ -117,7 +117,7 @@
                     <p><strong>Статус:</strong></p>
                     <form method="POST" id="statusForm" class="ms-3">
                         {% csrf_token %}
-                        <select name="status" id="status" class="form-select"
+                        <select name="status" id="status"
                                 onchange="document.getElementById('statusForm').submit()"
                                 style="background-color: #f7decdeb;">
                             {% for value, label in task_detail.STATUS_CHOICES %}
@@ -128,10 +128,36 @@
                         </select>
                     </form>
                 </div>
-
+                
                 <div class="task-footer">
                     <p><strong>Створив:</strong> {{ task_detail.created_by }}</p>
                     <p><strong>Дата створення:</strong> {{ task_detail.created_add }}</p>
+                </div>
+                <div class="status-form" style="margin-top: 2px;">
+                    <div style="display: flex; flex-direction: column;">
+                        {% if task_detail.executers.exists %}
+                            <p><strong>Співавтори:</strong></p>
+                            <ul>
+                                {% for executer in task_detail.executers.all %}
+                                    {% if executer.approwed %}
+                                        <li>{{ executer.executer_id.username }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>  
+                        {% else %}
+                            <p><strong>Співавтор:</strong></p>
+                        {% endif %}
+                        <form method="post" style="display: flex; align-content: start;">
+                            {% csrf_token %}
+                            {{ executer_form.executer_id }}
+                            <button type="submit" style="background-color: inherit; border: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <a href="{% url 'task_update' task_detail.pk %}" class="btn" style="color: black">
@@ -161,8 +187,7 @@
                             </p>
                             <p>{{ comment.text }}</p>
                             {% if comment.media %}
-                                <a href="{{ comment.media.url }}" target="_blank"><img src="{{ comment.media.url }}"
-                                                                                       alt="Image"></a>
+                                <a href="{{ comment.media.url }}" target="_blank"><img src="{{ comment.media.url }}" alt="Image"></a>
                             {% endif %}
                             <hr>
                         </div>
