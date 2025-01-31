@@ -89,7 +89,6 @@ def add_user(request):
             except IntegrityError:
                 messages.error(request, 'Користувач з такою поштою вже зареєстрований.')
         else:
-            # Если форма не валидна, ошибки будут переданы в шаблон
             print(form.errors)
             messages.error(request, 'Виникла помилка. Перевірте введені дані.')
     else:
