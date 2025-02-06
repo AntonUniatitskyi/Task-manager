@@ -26,9 +26,15 @@ class TaskListView(ListView):
         priority = self.request.GET.get("priority", "")
         # user = self.request.session.get('username')
         user = self.request.user
-        executer = models.Executer.objects.get(executer_id=user.id)
+        try:
+            executer = models.Executer.objects.get(executer_id=user.id)
+        except:
+            executer = None
         if user.is_authenticated:
-            queryset = queryset.filter(Q(created_by__username=user)| Q(executers=executer))
+            if executer:
+                queryset = queryset.filter(Q(created_by__username=user)| Q(executers=executer))
+            else:
+                queryset = queryset.filter(created_by__username=user)
         if status:
             queryset = queryset.filter(status=status)
         if priority:
