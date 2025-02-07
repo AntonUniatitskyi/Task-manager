@@ -6,6 +6,6 @@ class UserIsOwnerMixin(object):
         instance = self.get_object()
         # if instance.created_by != self.request.user and instance.executers != self.request.user:
         #     raise PermissionDenied
-        if instance.created_by != self.request.user and not instance.executers.filter(executer_id=self.request.user).exists():
+        if instance.created_by != self.request.user and not instance.executers.filter(executer_id=self.request.user.pk).exists():
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)

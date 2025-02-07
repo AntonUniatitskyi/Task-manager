@@ -54,7 +54,7 @@ class TaskListView(ListView):
         return context
 
 
-class TaskListDetail(UserIsOwnerMixin, DetailView):
+class TaskListDetail(LoginRequiredMixin, UserIsOwnerMixin, DetailView):
     model = models.Task
     template_name = 'todo/task_detail.html'
     context_object_name = 'task_detail'
