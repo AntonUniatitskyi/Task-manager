@@ -64,7 +64,7 @@ class TaskListDetail(LoginRequiredMixin, UserIsOwnerMixin, DetailView):
         queryset = super().get_queryset()
     
         user = self.request.user
-        executer = models.Executer.objects.get(executer_id=user.id)
+        executer = models.Executer.objects.filter(executer_id=user.id).first()
         if user.is_authenticated:
             queryset = queryset.filter(Q(created_by__username=user)| Q(executers=executer))
         
