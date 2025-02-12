@@ -1,0 +1,45 @@
+
+.list-group-numbered .no-number {
+    counter-increment: none;
+    position: relative;
+}
+
+.list-group-numbered .no-number::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+}
+
+.form-group-my {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.task-container-ap {
+    max-width: 600px;
+    padding: 5px;
+    text-align: left;
+    position: relative;
+    font-size: 16px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #b07d62;
+    box-shadow: 0 0 10px rgba(176, 125, 98, 0.8);
+    background-color: #fceee7;
+}
