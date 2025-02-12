@@ -9,6 +9,20 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+
+    <style>
+        .glowing-cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: rgba(176, 125, 98, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(176, 125, 98, 0.9);
+            pointer-events: none;
+            transition: transform 0.05s ease-out;
+        }
+    </style>
+
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #f7decdeb;">
 
@@ -30,6 +44,27 @@
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let cursor = document.createElement("div");
+        cursor.classList.add("glowing-cursor");
+        document.body.appendChild(cursor);
+
+        document.addEventListener("mousemove", function (e) {
+            cursor.style.left = e.clientX + "px";
+            cursor.style.top = e.clientY + "px";
+        });
+
+        document.addEventListener("mousedown", function () {
+            cursor.style.transform = "scale(1.5)";
+        });
+
+        document.addEventListener("mouseup", function () {
+            cursor.style.transform = "scale(1)";
+        });
+    });
+</script>
 
 <div class="container flex-grow-1">
     {% block content %}
