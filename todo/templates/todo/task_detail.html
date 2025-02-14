@@ -119,7 +119,7 @@
                         {% csrf_token %}
                         <select name="status" id="status"
                                 onchange="document.getElementById('statusForm').submit()"
-                                style="background-color: #f7decdeb;">
+                                style="background-color: #f7decdeb; border-radius: 5px; border: none;">
                             {% for value, label in task_detail.STATUS_CHOICES %}
                                 <option value="{{ value }}" {% if task_detail.status == value %}selected{% endif %}>
                                     {{ label }}

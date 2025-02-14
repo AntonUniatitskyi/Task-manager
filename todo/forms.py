@@ -45,7 +45,7 @@ class ExecuterForm(ModelForm):
         widgets = {
             "executer_id": Select(attrs={
                 'class': 'form-control form-select',
-                'style': 'background-color: #f7decdeb;'
+                'style': 'background-color: #f7decdeb; width: 100px'
             })
         }
 
