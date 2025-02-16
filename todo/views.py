@@ -72,6 +72,11 @@ class TaskListDetail(LoginRequiredMixin, UserIsOwnerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        task = self.get_object()
+        user = self.request.user
+        context['is_executor'] = task.executers.filter(executer_id=user).exists()
+
         context['comment_form'] = CommentForm()
         context['executer_form'] = ExecuterForm()
         return context
